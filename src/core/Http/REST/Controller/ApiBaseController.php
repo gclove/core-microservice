@@ -3,6 +3,7 @@
 	namespace Core\Http\REST\Controller;
 
 	use Laravel\Lumen\Routing\Controller as BaseController;
+	use ResponseHTTP\Response\HttpResponse;
 
 	/**
 	 * Class ApiBaseController
@@ -53,5 +54,9 @@
 			$this->acl = app('service.acl');
 			$this->cache = app('service.cache');
 			$this->log = app('service.log');
+		}
+
+		public function response() {
+			return new HttpResponse();
 		}
 	}

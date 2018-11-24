@@ -24,4 +24,10 @@
 		],
 
 		'alias' => [],
+
+		'middlewares' => [
+			\Core\Http\Middleware\CorsMiddleware::class
+		],
+
+		'route_middlewares' => [],
 	];

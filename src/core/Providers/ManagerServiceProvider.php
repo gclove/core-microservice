@@ -17,7 +17,6 @@
 		{
 			$this->registerConfig();
 			$this->registerProviders();
-			$this->registerAlias();
 		}
 
 		protected function registerProviders()
@@ -49,17 +48,6 @@
 				foreach ($productionProviders as $productionProvider) {
 					$this->app->register($productionProvider);
 				}
-			}
-		}
-
-		/**
-		 * Load alias
-		 */
-		protected function registerAlias()
-		{
-			$aliases = config('providers.alias') ?: [];
-			foreach ($aliases as $key => $value) {
-				class_alias($value, $key);
 			}
 		}
 
