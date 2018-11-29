@@ -56,7 +56,7 @@
 
 			$this->app->singleton(
 				\Illuminate\Contracts\Debug\ExceptionHandler::class,
-				\Core\Exceptions\Handler::class
+				\ResponseHTTP\Response\Laravel\Exceptions\Handler::class
 			);
 		}
 
@@ -101,7 +101,7 @@
 		 * Register providers dependency
 		 */
 		protected function registerProviders(){
-			$this->app->register(\ResponseHTTP\HttpServiceProvider::class);
+			$this->app->register(\ResponseHTTP\Response\Laravel\Providers\HttpServiceProvider::class);
 			$this->app->register(\CacheSystem\CacheServiceProvider::class);
 			$this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
 			$this->app->register(\Aws\Laravel\AwsServiceProvider::class);
