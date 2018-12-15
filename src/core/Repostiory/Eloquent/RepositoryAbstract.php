@@ -23,16 +23,10 @@
 		public $model;
 
 		/**
-		 * @var Response
-		 */
-		protected $response;
-
-		/**
 		 * @param App $app
 		 */
 		public function __construct(App $app) {
 			$this->app = $app;
-			$this->response = app('service.response');
 			$this->implementsModel();
 		}
 

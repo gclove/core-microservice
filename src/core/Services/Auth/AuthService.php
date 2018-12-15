@@ -14,7 +14,6 @@
 
 	class AuthService
 	{
-
 		/**
 		 * @var JWTAuth
 		 */
