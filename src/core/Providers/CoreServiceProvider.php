@@ -21,6 +21,32 @@
 			$this->registerProviders();
 		}
 
+		/**
+		 * Load config
+		 */
+		protected function registerConfig()
+		{
+			$this->app->configure('cache');
+			$this->app->configure('database');
+			$this->app->configure('filesystems');
+			$this->app->configure('permission');
+		}
+
+		/**
+		 * Load alias
+		 */
+		protected function registerAlias()
+		{
+			$aliases = [
+				'ApiService' => \Core\Services\Api\ApiFacade::class,
+				'AclService' => \Core\Services\ACL\ACLFacade::class,
+				'LogService' => \Core\Services\Log\LogFacade::class,
+			];
+
+			foreach ($aliases as $key => $value) {
+				class_alias($value, $key);
+			}
+		}
 
 		/**
 		 * Register system providers Kernel/Console/Filesystem etc..
@@ -40,10 +66,12 @@
 				\App\Console\Kernel::class
 			);
 
-			$this->app->singleton(
-				\Illuminate\Contracts\Debug\ExceptionHandler::class,
-				\ResponseHTTP\Response\Laravel\Exceptions\Handler::class
-			);
+			if ($handler = config('providers.handler')) {
+				$this->app->singleton(
+					\Illuminate\Contracts\Debug\ExceptionHandler::class,
+					$handler
+				);
+			}
 		}
 
 		/**
@@ -86,38 +114,13 @@
 		/**
 		 * Register providers dependency
 		 */
-		protected function registerProviders(){
+		protected function registerProviders()
+		{
 			$this->app->register(\ResponseHTTP\Response\Laravel\Providers\HttpServiceProvider::class);
 			$this->app->register(\CacheSystem\CacheServiceProvider::class);
 			$this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
 			$this->app->register(\Aws\Laravel\AwsServiceProvider::class);
 			$this->app->register(\Folklore\GraphQL\LumenServiceProvider::class);
 			$this->app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
-		}
-
-		/**
-		 * Load alias
-		 */
-		protected function registerAlias()
-		{
-			$aliases=[
-				'ApiService' => \Core\Services\Api\ApiFacade::class,
-				'AclService' => \Core\Services\ACL\ACLFacade::class,
-				'LogService' => \Core\Services\Log\LogFacade::class
-			];
-
-			foreach ($aliases as $key => $value){
-				class_alias($value, $key);
-			}
-		}
-
-		/**
-		 * Load config
-		 */
-		protected function registerConfig() {
-			$this->app->configure('cache');
-			$this->app->configure('database');
-			$this->app->configure('filesystems');
-			$this->app->configure('permission');
 		}
 	}
