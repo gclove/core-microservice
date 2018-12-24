@@ -116,7 +116,7 @@
 		 */
 		protected function registerProviders()
 		{
-			$this->app->register(\ResponseHTTP\Response\Laravel\Providers\HttpServiceProvider::class);
+			$this->app->register(\ResponseHTTP\Response\Laravel\Providers\ResponseServiceProvider::class);
 			$this->app->register(\CacheSystem\CacheServiceProvider::class);
 			$this->app->register(\Spatie\Permission\PermissionServiceProvider::class);
 			$this->app->register(\Aws\Laravel\AwsServiceProvider::class);
