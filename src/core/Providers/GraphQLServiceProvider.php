@@ -18,9 +18,6 @@
 			$this->registerProviders();
 			$this->registerContractsQL();
 			$this->registerTypeQL();
-
-			//load alias TypeRegistry
-			class_alias(\Core\Http\GraphQL\TypeRegistry::class, 'TypeRegistry');
 		}
 
 		/**
@@ -37,7 +34,8 @@
 		 */
 		protected function registerProviders()
 		{
-			$this->app->register(\Folklore\GraphQL\LumenServiceProvider::class);
+			$provider = config('graphql_type.providers');
+			$this->app->register($provider);
 		}
 
 		/**
@@ -45,7 +43,7 @@
 		 */
 		protected function registerContractsQL()
 		{
-			$contracts = config('graphql_type.contracts')?:[];
+			$contracts = config('graphql_type.contracts')?:array();
 			foreach ($contracts as $key => $contract) {
 				GraphQL::addType($contract, $key);
 			}
@@ -56,9 +54,12 @@
 		 */
 		protected function registerTypeQL()
 		{
-			$models = config('graphql_type.model')?:[];
+			$models = config('graphql_type.model')?:array();
 			foreach ($models as $key => $model) {
 				GraphQL::addType($model, $key);
 			}
+
+			//load alias TypeRegistry
+			class_alias(\Core\Http\GraphQL\TypeRegistry::class, 'TypeRegistry');
 		}
 	}

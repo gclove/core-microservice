@@ -19,22 +19,8 @@
 			$this->registerServices();
 			$this->registerMiddleware();
 			$this->registerProviders();
-			$this->registerConsole();
 		}
 
-		/**
-		 * Bootstrap publishes
-		 *
-		 * @return void
-		 */
-		protected function registerConsole()
-		{
-			$this->commands(\Core\Console\Commands\PublishCommand::class);
-			$this->commands(\Core\Console\Commands\CreateProvider::class);
-			$this->commands(\Core\Console\Commands\CreateTransformer::class);
-			$this->commands(\Core\Console\Commands\CreateApiController::class);
-			$this->commands(\Core\Console\Commands\CreateRepositroy::class);
-		}
 
 		/**
 		 * Register system providers Kernel/Console/Filesystem etc..

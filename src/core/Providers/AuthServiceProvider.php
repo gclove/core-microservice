@@ -41,7 +41,7 @@
 		 */
 		private function policies()
 		{
-			$policies = config('auth.policies')?:[];
+			$policies = config('permission.policies')?:array();
 			foreach ($policies as $key => $policy)
 				Gate::policy($key, $policy);
 		}
@@ -51,7 +51,7 @@
 		 */
 		private function define()
 		{
-			$defines = config('auth.defines')?:[];
+			$defines = config('permission.defines')?:array();
 			foreach ($defines as $key => $define)
 				Gate::define($key, $define);
 		}
