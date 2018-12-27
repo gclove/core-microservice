@@ -3,7 +3,7 @@
 
 #### Let's go
     
-    composer require fabrizio-cafolla/response-http
+    composer require fabrizio-cafolla/core-microservice
     
     php aritsan microservice:publish
     
