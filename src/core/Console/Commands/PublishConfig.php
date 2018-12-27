@@ -5,7 +5,7 @@
 	use Illuminate\Console\Command;
 	use Illuminate\Filesystem\Filesystem;
 
-	class PublishCommand extends Command
+	class PublishConfig extends Command
 	{
 		/**
 		 * The name and signature of the console command.

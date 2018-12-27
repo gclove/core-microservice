@@ -9,7 +9,6 @@
 		private static $bootProviders = array(
 			'core' => \Core\Providers\CoreServiceProvider::class,
 			'auth' => \Core\Providers\AuthServiceProvider::class,
-			'graphql' => \Core\Providers\GraphQLServiceProvider::class,
 		);
 
 		private static $globalProviders;
@@ -22,14 +21,14 @@
 		public function register()
 		{
 			$this->registerConfig();
-			$this->registerProviders();
 			$this->registerAlias();
+			$this->registerProviders();
 			$this->registerMiddleware();
 			$this->registerConsole();
 		}
 
 		/**
-		 * Load config
+		 * Register config providers (or load bootProviders)
 		 */
 		protected function registerConfig(): void
 		{
@@ -42,6 +41,9 @@
 			}
 		}
 
+		/**
+		 * Register providers from array in config providers
+		 */
 		protected function registerProviders(): void
 		{
 			/**
@@ -53,6 +55,9 @@
 			$this->registerEnvProviders();
 		}
 
+		/**
+		 * Register providers only specific env from array in config providers
+		 */
 		protected function registerEnvProviders()
 		{
 			/**
@@ -90,21 +95,7 @@
 		}
 
 		/**
-		 * Bootstrap publishes
-		 *
-		 * @return void
-		 */
-		protected function registerConsole()
-		{
-			$this->commands(\Core\Console\Commands\PublishCommand::class);
-			$this->commands(\Core\Console\Commands\CreateProvider::class);
-			$this->commands(\Core\Console\Commands\CreateTransformer::class);
-			$this->commands(\Core\Console\Commands\CreateApiController::class);
-			$this->commands(\Core\Console\Commands\CreateRepositroy::class);
-		}
-
-		/**
-		 * Load alias
+		 * Register alias from array in config providers
 		 */
 		protected function registerAlias()
 		{
@@ -115,22 +106,34 @@
 		}
 
 		/**
-		 * Register middleware
+		 * Register middleware from array in config providers
 		 */
 		protected function registerMiddleware()
 		{
 			$middlewares = config('providers.middlewares') ?: array();
 			foreach ($middlewares as $middleware) {
 				$this->app->middleware([
-					$middleware
+					$middleware,
 				]);
 			}
 
 			$route_middlewares = config('providers.route_middlewares') ?: array();
 			foreach ($route_middlewares as $key => $value) {
 				$this->app->routeMiddleware([
-					$key => $value
+					$key => $value,
 				]);
 			}
+		}
+
+		/**
+		 * Register console commands
+		 */
+		protected function registerConsole()
+		{
+			$this->commands(\Core\Console\Commands\PublishConfig::class);
+			$this->commands(\Core\Console\Commands\CreateProvider::class);
+			$this->commands(\Core\Console\Commands\CreateTransformer::class);
+			$this->commands(\Core\Console\Commands\CreateApiController::class);
+			$this->commands(\Core\Console\Commands\CreateRepositroy::class);
 		}
 	}
