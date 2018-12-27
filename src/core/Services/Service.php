@@ -15,7 +15,7 @@
 		/**
 		 *    Helper function to wrap ServiceStatus return.
 		 *
-		 * @param string $statusCode
+		 * @param int $statusCode
 		 *    The status code to be passed to ServiceStatus.
 		 * @param        array
 		 *    Custom data.

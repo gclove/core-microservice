@@ -1,5 +1,5 @@
 {
-    "name": "fabrizio-cafolla/microservice-lumen-framework",
+    "name": "fabrizio-cafolla/core-microservice",
     "description": "Framework of Microservice Lumen.",
     "keywords": ["framework", "laravel", "lumen", "REST", "GraphQL","cache", "redis"],
     "license": "MIT",
