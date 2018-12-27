@@ -10,7 +10,7 @@
 
 	use Tymon\JWTAuth\JWTAuth;
 	use Illuminate\Contracts\Auth\Guard;
-	use HttpResponse;
+	use ServiceResponse;
 
 	class AuthService
 	{
@@ -60,15 +60,15 @@
 		{
 			try {
 				if (!$user = $this->jwt->parseToken()->authenticate())
-					return HttpResponse::errorException('Error Exception');
+					return ServiceResponse::errorException('Error Exception');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenBlacklistedException $e) {
-				return HttpResponse::errorException('The token has been blacklisted');
+				return ServiceResponse::errorException('The token has been blacklisted');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-				return HttpResponse::errorException('Token expired');
+				return ServiceResponse::errorException('Token expired');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-				return HttpResponse::errorException('Token invalid');
+				return ServiceResponse::errorException('Token invalid');
 			} catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-				return HttpResponse::errorException('Token absent');
+				return ServiceResponse::errorException('Token absent');
 			}
 		}
 
@@ -82,7 +82,7 @@
 		{
 			$user = $this->guard()->user();
 			if (!$user)
-				return HttpResponse::errorNotFound("User not found");
+				return ServiceResponse::errorNotFound("User not found");
 
 			return $user;
 		}
@@ -99,7 +99,7 @@
 		{
 			$this->tryAuthenticatedUser();
 			$this->jwt->parseToken()->invalidate($force);
-			return HttpResponse::success('The token has been invalidated');
+			return ServiceResponse::success('The token has been invalidated');
 		}
 
 		/**
@@ -112,6 +112,6 @@
 		public function refresh($force = false, $resetClaims = false)
 		{
 			$token = $this->jwt->parseToken()->refresh($force, $resetClaims);
-			return HttpResponse::success(compact('token'));
+			return ServiceResponse::success(compact('token'));
 		}
 	}

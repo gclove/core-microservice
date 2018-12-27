@@ -4,6 +4,7 @@
 
 	use Laravel\Lumen\Routing\Controller as BaseController;
 	use ResponseHTTP\Response\HttpResponse;
+	use StatusService;
 
 	/**
 	 * Class ApiBaseController
@@ -58,5 +59,37 @@
 
 		public function response() {
 			return new HttpResponse();
+		}
+
+
+		/**
+		 *    Helper function to wrap ServiceStatus return.
+		 *
+		 * @param string $statusCode
+		 *    The status code to be passed to ServiceStatus.
+		 * @param        array
+		 *    Custom data.
+		 * @param string $message
+		 *    A message.
+		 *
+		 * @return StatusService
+		 */
+		public function fail(int $statusCode = null, array $data = array(), string $message = null): object {
+			return StatusService::set(FALSE, $statusCode, $data, $message);
+		}
+
+		/**
+		 *    Helper function to wrap StatusService return.
+		 *
+		 * @param array         $data
+		 *    The data this service is returing.
+		 * @param null          $statusCode
+		 * @param string|string $message
+		 *    A message.
+		 *
+		 * @return ServiceStatus
+		 */
+		public function success(int $statusCode = null, array $data = array(), string $message = null): object {
+			return StatusService::set(TRUE, $statusCode, $data, $message);
 		}
 	}

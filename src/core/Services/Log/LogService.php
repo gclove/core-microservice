@@ -14,7 +14,7 @@
 	use Monolog\Logger;
 	use Monolog\Handler\StreamHandler;
 	use Illuminate\Support\Facades\Storage;
-	use HttpResponse;
+	use ServiceResponse;
 
 	class LogService
 	{
@@ -147,7 +147,7 @@
 			if (Storage::disk('logs')->exists($path))
 				return $this->logProcessor($path);
 
-			HttpResponse::errorException('Log required not exist: '.$name);
+			ServiceResponse::errorException('Log required not exist: '.$name);
 		}
 
 		/**
@@ -162,7 +162,7 @@
 			if (array_has($this->default, $name))
 				return $this->default[$name];
 
-			HttpResponse::errorException('Default log required not exist: '.$name);
+			ServiceResponse::errorException('Default log required not exist: '.$name);
 		}
 
 		/**
@@ -177,7 +177,7 @@
 			if (array_has($this->defaultDay, $name))
 				return $this->defaultDay[$name];
 
-			HttpResponse::errorException('Default of day log required not exist: '.$name);
+			ServiceResponse::errorException('Default of day log required not exist: '.$name);
 		}
 
 		/**

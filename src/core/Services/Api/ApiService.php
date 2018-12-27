@@ -10,7 +10,6 @@
 
 	use Core\Services\Api\Traits\Fractal;
 
-
 	class ApiService
 	{
 		use Fractal;

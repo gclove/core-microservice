@@ -41,6 +41,7 @@
 				'ApiService' => \Core\Services\Api\ApiFacade::class,
 				'AclService' => \Core\Services\ACL\ACLFacade::class,
 				'LogService' => \Core\Services\Log\LogFacade::class,
+				'StatusService' => \Core\Services\Status\StatusFacade::class,
 			];
 
 			foreach ($aliases as $key => $value) {
@@ -93,6 +94,11 @@
 			 * Service Log
 			 */
 			$this->app->singleton('service.log', 'Core\Services\Log\LogService');
+
+			/**
+			 * Service Status
+			 */
+			$this->app->singleton('service.status', 'Core\Services\Status\StatusService');
 		}
 
 		/**
