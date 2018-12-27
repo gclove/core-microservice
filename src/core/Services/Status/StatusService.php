@@ -8,6 +8,7 @@
 
 	namespace Core\Services\Status;
 
+
 	class StatusService
 	{
 		/**

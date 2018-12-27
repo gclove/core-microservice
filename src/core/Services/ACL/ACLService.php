@@ -8,6 +8,7 @@
 
 	namespace Core\Services\ACL;
 
+	use Core\Services\Service;
 	use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 	use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 	use Spatie\Permission\Exceptions\RoleAlreadyExists;
@@ -20,7 +21,8 @@
 	 * Class ACLService
 	 * @package Core\Services\ACL
 	 */
-	class ACLService
+
+	class ACLService extends Service
 	{
 		/**
 		 * @var Role

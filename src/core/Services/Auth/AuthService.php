@@ -8,11 +8,11 @@
 
 	namespace Core\Services\Auth;
 
+	use Core\Services\Service;
 	use Tymon\JWTAuth\JWTAuth;
 	use Illuminate\Contracts\Auth\Guard;
-	use ServiceResponse;
 
-	class AuthService
+	class AuthService extends Service
 	{
 		/**
 		 * @var JWTAuth
@@ -60,15 +60,15 @@
 		{
 			try {
 				if (!$user = $this->jwt->parseToken()->authenticate())
-					return ServiceResponse::errorException('Error Exception');
+					return $this->response()->errorException('Error Exception');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenBlacklistedException $e) {
-				return ServiceResponse::errorException('The token has been blacklisted');
+				return $this->response()->errorException('The token has been blacklisted');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-				return ServiceResponse::errorException('Token expired');
+				return $this->response()->errorException('Token expired');
 			} catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-				return ServiceResponse::errorException('Token invalid');
+				return $this->response()->errorException('Token invalid');
 			} catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-				return ServiceResponse::errorException('Token absent');
+				return $this->response()->errorException('Token absent');
 			}
 		}
 
@@ -82,7 +82,7 @@
 		{
 			$user = $this->guard()->user();
 			if (!$user)
-				return ServiceResponse::errorNotFound("User not found");
+				return $this->response()->errorNotFound("User not found");
 
 			return $user;
 		}
@@ -99,7 +99,7 @@
 		{
 			$this->tryAuthenticatedUser();
 			$this->jwt->parseToken()->invalidate($force);
-			return ServiceResponse::success('The token has been invalidated');
+			return $this->response()->success('The token has been invalidated');
 		}
 
 		/**
@@ -112,6 +112,6 @@
 		public function refresh($force = false, $resetClaims = false)
 		{
 			$token = $this->jwt->parseToken()->refresh($force, $resetClaims);
-			return ServiceResponse::success(compact('token'));
+			return $this->response()->success(compact('token'));
 		}
 	}

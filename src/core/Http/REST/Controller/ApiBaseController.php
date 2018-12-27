@@ -4,7 +4,6 @@
 
 	use Laravel\Lumen\Routing\Controller as BaseController;
 	use ResponseHTTP\Response\HttpResponse;
-	use StatusService;
 
 	/**
 	 * Class ApiBaseController
@@ -16,11 +15,6 @@
 		 * @var ApiService
 		 */
 		public $api;
-
-		/**
-		 * @var Response
-		 */
-		public $response;
 
 		/**
 		 * @var AuthService
@@ -50,46 +44,23 @@
 		public function __construct()
 		{
 			$this->api = app('service.api');
-			$this->response = app('service.response');
 			$this->auth = app('service.auth');
 			$this->acl = app('service.acl');
 			$this->cache = app('service.cache');
 			$this->log = app('service.log');
 		}
 
-		public function response() {
-			return new HttpResponse();
-		}
-
-
 		/**
-		 *    Helper function to wrap ServiceStatus return.
+		 *   Helper function to create Response http
 		 *
-		 * @param string $statusCode
-		 *    The status code to be passed to ServiceStatus.
-		 * @param        array
-		 *    Custom data.
-		 * @param string $message
-		 *    A message.
+		 * @param null  $content
+		 * @param int   $status
+		 * @param array $headers
+		 * @param bool  $json
 		 *
-		 * @return StatusService
+		 * @return \ResponseHTTP\Response\HttpResponse
 		 */
-		public function fail(int $statusCode = null, array $data = array(), string $message = null): object {
-			return StatusService::set(FALSE, $statusCode, $data, $message);
-		}
-
-		/**
-		 *    Helper function to wrap StatusService return.
-		 *
-		 * @param array         $data
-		 *    The data this service is returing.
-		 * @param null          $statusCode
-		 * @param string|string $message
-		 *    A message.
-		 *
-		 * @return ServiceStatus
-		 */
-		public function success(int $statusCode = null, array $data = array(), string $message = null): object {
-			return StatusService::set(TRUE, $statusCode, $data, $message);
+		public function response($content = null, int $status = 200, array $headers = array(), bool $json = false) {
+			return new HttpResponse($content, $status,$headers, $json);
 		}
 	}

@@ -8,9 +8,10 @@
 
 	namespace Core\Services\Api;
 
+	use Core\Services\Service;
 	use Core\Services\Api\Traits\Fractal;
 
-	class ApiService
+	class ApiService extends Service
 	{
 		use Fractal;
 	}

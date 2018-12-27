@@ -8,15 +8,15 @@
 
 	namespace Core\Services\Log;
 
+	use Core\Services\Service;
 	use Core\Exceptions\LogsException;
 	use Carbon\Carbon;
 	use Monolog\Formatter\JsonFormatter;
 	use Monolog\Logger;
 	use Monolog\Handler\StreamHandler;
 	use Illuminate\Support\Facades\Storage;
-	use ServiceResponse;
 
-	class LogService
+	class LogService extends Service
 	{
 		/**
 		 * Basic log
@@ -147,7 +147,7 @@
 			if (Storage::disk('logs')->exists($path))
 				return $this->logProcessor($path);
 
-			ServiceResponse::errorException('Log required not exist: '.$name);
+			$this->response()->errorException('Log required not exist: '.$name);
 		}
 
 		/**
@@ -162,7 +162,7 @@
 			if (array_has($this->default, $name))
 				return $this->default[$name];
 
-			ServiceResponse::errorException('Default log required not exist: '.$name);
+			$this->response()->errorException('Default log required not exist: '.$name);
 		}
 
 		/**
@@ -177,7 +177,7 @@
 			if (array_has($this->defaultDay, $name))
 				return $this->defaultDay[$name];
 
-			ServiceResponse::errorException('Default of day log required not exist: '.$name);
+			$this->response()->errorException('Default of day log required not exist: '.$name);
 		}
 
 		/**
