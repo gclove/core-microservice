@@ -36,11 +36,6 @@
 		 */
 		public $log;
 
-		/**
-		 * @var Log
-		 */
-		public $helpers;
-
 		public function __construct()
 		{
 			$this->api = app('service.api');

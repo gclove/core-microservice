@@ -2,17 +2,10 @@
 
 	namespace Core\Providers;
 
-	use Illuminate\Support\ServiceProvider;
+	use Core\Providers\BaseServiceProvider;
 
-	class ManagerServiceProvider extends ServiceProvider
+	class ManagerServiceProvider extends BaseServiceProvider
 	{
-		private static $bootProviders = array(
-			'core' => \Core\Providers\CoreServiceProvider::class,
-			'auth' => \Core\Providers\AuthServiceProvider::class,
-		);
-
-		private static $globalProviders;
-
 		/**
 		 * Register any application services.
 		 *
@@ -20,45 +13,37 @@
 		 */
 		public function register()
 		{
-			$this->registerConfig();
-			$this->registerAlias();
-			$this->registerProviders();
-			$this->registerMiddleware();
-			$this->registerConsole();
+			$this->init('configs',array('providers'),true);
+			$this->init('alias', config('providers.alias') ?: array());
+			$this->init('providers',$this->providersManager());
+			$this->init('middleware', config('providers.middleware') ?: array());
+			$this->init('routeMiddleware', config('providers.route_middleware') ?: array());
+			$this->init('console', array(
+				\Core\Console\Commands\PublishConfig::class,
+				\Core\Console\Commands\CreateProvider::class,
+				\Core\Console\Commands\CreateTransformer::class,
+				\Core\Console\Commands\CreateApiController::class,
+				\Core\Console\Commands\CreateRepositroy::class,
+			));
+
+			$this->run();
 		}
 
-		/**
-		 * Register config providers (or load bootProviders)
-		 */
-		protected function registerConfig(): void
-		{
-			$this->app->configure('providers');
+		private function providersManager(): array {
+			$providers = config('providers.global') ? : array(
+				'services' => \Core\Providers\Core\ServicesProvider::class,
+				'auth' => \Core\Providers\Core\AuthServiceProvider::class,
+			);
 
-			if ($global = config('providers.global')) {
-				self::$globalProviders = $global;
-			} else {
-				self::$globalProviders = self::$bootProviders;
-			}
+			if($mergedProviders = $this->addEnvProviders($providers))
+				return $mergedProviders;
+
+			return $providers;
 		}
-
-		/**
-		 * Register providers from array in config providers
-		 */
-		protected function registerProviders(): void
-		{
-			/**
-			 * Load Global Providers
-			 */
-			foreach (self::$globalProviders as $globalProvider)
-				$this->app->register($globalProvider);
-
-			$this->registerEnvProviders();
-		}
-
 		/**
 		 * Register providers only specific env from array in config providers
 		 */
-		protected function registerEnvProviders()
+		private function addEnvProviders(array $providers): ?array
 		{
 			/**
 			 * Load Develop Providers if env is 'develop'
@@ -68,7 +53,7 @@
 				foreach ($localProviders as $localProvider) {
 					$this->app->register($localProvider);
 				}
-				unset($localProviders);
+				return array_merge($providers, $localProviders);
 			}
 
 			/**
@@ -79,7 +64,7 @@
 				foreach ($stagingProviders as $stagingProvider) {
 					$this->app->register($stagingProvider);
 				}
-				unset($stagingProviders);
+				return array_merge($providers, $stagingProviders);
 			}
 
 			/**
@@ -90,50 +75,9 @@
 				foreach ($productionProviders as $productionProvider) {
 					$this->app->register($productionProvider);
 				}
-				unset($productionProviders);
-			}
-		}
-
-		/**
-		 * Register alias from array in config providers
-		 */
-		protected function registerAlias()
-		{
-			$aliases = config('providers.alias') ?: array();
-			foreach ($aliases as $key => $value) {
-				class_alias($value, $key);
-			}
-		}
-
-		/**
-		 * Register middleware from array in config providers
-		 */
-		protected function registerMiddleware()
-		{
-			$middlewares = config('providers.middlewares') ?: array();
-			foreach ($middlewares as $middleware) {
-				$this->app->middleware([
-					$middleware,
-				]);
+				return array_merge($providers, $productionProviders);
 			}
 
-			$route_middlewares = config('providers.route_middlewares') ?: array();
-			foreach ($route_middlewares as $key => $value) {
-				$this->app->routeMiddleware([
-					$key => $value,
-				]);
-			}
-		}
-
-		/**
-		 * Register console commands
-		 */
-		protected function registerConsole()
-		{
-			$this->commands(\Core\Console\Commands\PublishConfig::class);
-			$this->commands(\Core\Console\Commands\CreateProvider::class);
-			$this->commands(\Core\Console\Commands\CreateTransformer::class);
-			$this->commands(\Core\Console\Commands\CreateApiController::class);
-			$this->commands(\Core\Console\Commands\CreateRepositroy::class);
+			return null;
 		}
 	}
