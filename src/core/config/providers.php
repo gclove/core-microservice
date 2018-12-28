@@ -15,9 +15,8 @@
 		|
 		*/
 		'global' => [
-			'core' => \Core\Providers\CoreServiceProvider::class,
-			'auth' => \Core\Providers\AuthServiceProvider::class,
-			//'graphql' => \Core\Providers\GraphQLServiceProvider::class,
+			'core' => \Core\Providers\Core\ServicesProvider::class,
+			'auth' => \Core\Providers\Core\AuthServiceProvider::class,
 		],
 
 		'production' => [

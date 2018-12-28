@@ -9,8 +9,9 @@
 		|
 		*/
 		'service_providers' => [
-			'jwt' =>  env('AUTH_PROVIDERS', \Tymon\JWTAuth\Providers\LumenServiceProvider::class)
+			'jwt' =>  env('AUTH_PROVIDERS', Tymon\JWTAuth\Providers\LaravelServiceProvider::class)
 		],
+
 		/*
 		|--------------------------------------------------------------------------
 		| Authentication Defaults
@@ -63,6 +64,11 @@
 		|
 		*/
 		'providers' => [
+			//'users' => [
+			//	'driver' => 'eloquent',
+			//	'model' => App\User::class,
+			//],
+
 			'jwt' => [
 				'driver' => 'eloquent',
 				'model' => env('AUTH_MODEL', App\Models\User::class),

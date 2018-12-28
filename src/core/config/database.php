@@ -39,17 +39,18 @@
 		*/
 		'connections' => [
 			'mysql' => [
-				'driver'    => 'mysql',
-				'host'      => env('DB_HOST', 'mysql'),
-				'port'      => env('DB_PORT', 3306),
-				'database'  => env('DB_DATABASE', 'test_develop'),
-				'username'  => env('DB_USERNAME', 'root'),
-				'password'  => env('DB_PASSWORD', 'root'),
-				'charset'   => env('DB_CHARSET', 'utf8'),
+				'driver' => 'mysql',
+				'host' => env('DB_HOST', '127.0.0.1'),
+				'port' => env('DB_PORT', '3306'),
+				'database' => env('DB_DATABASE', 'forge'),
+				'username' => env('DB_USERNAME', 'forge'),
+				'password' => env('DB_PASSWORD', ''),
+				'charset'   => env('DB_CHARSET', 'utf8mb4'),
 				'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
 				'prefix'    => env('DB_PREFIX', ''),
 				'timezone'  => env('DB_TIMEZONE', '+00:00'),
 				'strict'    => env('DB_STRICT_MODE', false),
+				'engine' => null,
 			],
 		],
 		/*
@@ -75,7 +76,9 @@
 		*/
 		'redis' => [
 			'cluster' => false,
+
 			'client' => 'phpredis',
+
 			'default' => [
 				'host' => env('REDIS_HOST', 'redis'),
 				'password' => env('REDIS_PASSWORD', null),

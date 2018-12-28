@@ -37,6 +37,18 @@
 				$this->_lunch($key, true);
 		}
 
+		/**
+		 * @param string $method
+		 * @param bool   $writeSync
+		 */
+		private function _lunch(string $method, bool $writeSync = false): void
+		{
+			$writeSync ? $this->sync[$method] = true : NULL;
+
+			$method = 'register' . ucfirst($method);
+			$this->{$method}();
+		}
+
 		protected function run()
 		{
 			foreach ($this->register as $key => $value)
@@ -49,8 +61,10 @@
 		 */
 		protected function registerConfigs(): void
 		{
-			foreach ($this->register['configs'] as $config)
-				is_string($config) ? $this->app->configure($config) : NULL;
+			$app = detect_version(true);
+			if ('Lumen' === $app['framework'])
+				foreach ($this->register['configs'] as $config)
+					is_string($config) ? $this->app->configure($config) : NULL;
 		}
 
 		/**
@@ -94,7 +108,9 @@
 		 */
 		protected function registerRouteMiddleware(): void
 		{
-			$this->app->routeMiddleware($this->register['routeMiddleware']);
+			$app = detect_version(true);
+			if ('Lumen' === $app['framework'])
+				$this->app->routeMiddleware($this->register['routeMiddleware']);
 		}
 
 		/**
@@ -104,17 +120,5 @@
 		{
 			foreach ($this->register['console'] as $value)
 				$this->commands($value);
-		}
-
-		/**
-		 * @param string $method
-		 * @param bool   $writeSync
-		 */
-		private function _lunch(string $method, bool $writeSync = false): void
-		{
-			$writeSync ? $this->sync[$method] = true : NULL;
-
-			$method = 'register' . ucfirst($method);
-			$this->{$method}();
 		}
 	}
