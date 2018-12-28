@@ -33,25 +33,18 @@
 		}
 	}
 
-	if (!function_exists('detect_version')) {
+	if (!function_exists('framework')) {
 		/**
-		 * Get version
-		 *
-		 * @param  string $separete get array with separete value of version and framework name
+		 * Get version of framework
 		 *
 		 * @return string
 		 */
-		function detect_version(bool $separete = false)
+		function framework(): string
 		{
-			Artisan::call('help', array('--version'));
-			$detected = Artisan::output();
+			$version = app()->version();
+			if(str_contains($version, 'Lumen'))
+				return 'Lumen';
 
-			if (false === $separete)
-				return $detected;
-
-			$version = trim(str_after($detected, 'Framework'));
-			$framework = trim(str_before($detected, 'Framework'));
-
-			return array('version' => $version, 'framework' => $framework);
+			return 'Laravel';
 		}
 	}

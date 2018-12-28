@@ -61,8 +61,7 @@
 		 */
 		protected function registerConfigs(): void
 		{
-			$app = detect_version(true);
-			if ('Lumen' === $app['framework'])
+			if ('Lumen' === framework())
 				foreach ($this->register['configs'] as $config)
 					is_string($config) ? $this->app->configure($config) : NULL;
 		}
@@ -108,8 +107,7 @@
 		 */
 		protected function registerRouteMiddleware(): void
 		{
-			$app = detect_version(true);
-			if ('Lumen' === $app['framework'])
+			if ('Lumen' === framework())
 				$this->app->routeMiddleware($this->register['routeMiddleware']);
 		}
 
