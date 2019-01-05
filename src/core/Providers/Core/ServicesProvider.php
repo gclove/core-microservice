@@ -25,6 +25,7 @@
 
 			$this->init('providers',array(
 				\ResponseHTTP\Response\Laravel\Providers\ResponseServiceProvider::class,
+				\ResourcesManager\ResourcesManagerServiceProviders::class,
 				\CacheSystem\CacheServiceProvider::class,
 				\Spatie\Permission\PermissionServiceProvider::class,
 				\Aws\Laravel\AwsServiceProvider::class,

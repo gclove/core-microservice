@@ -18,7 +18,7 @@
 		 *
 		 * @return \ResourcesManager\Services\ResourcesService
 		 */
-		public function resoruce() {
+		public function resource() {
 			return app('service.resources');
 		}
 
