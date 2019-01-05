@@ -19,6 +19,7 @@
 				'ApiService' => \Core\Services\Api\ApiFacade::class,
 				'AclService' => \Core\Services\ACL\ACLFacade::class,
 				'LogService' => \Core\Services\Log\LogFacade::class,
+				'ManagerService' => \Core\Services\Manager\ManagerFacade::class,
 				'StatusService' => \Core\Services\Status\StatusFacade::class,
 			));
 
@@ -34,6 +35,7 @@
 				'service.api' => ['class' => 'Core\Services\Api\ApiService', 'type' => 'singleton'],
 				'service.acl' => ['class' => 'Core\Services\ACL\ACLService', 'type' => 'singleton'],
 				'service.log' => ['class' => 'Core\Services\Log\LogService', 'type' => 'singleton'],
+				'service.manager' => ['class' => 'Core\Services\Manager\ManagerService', 'type' => 'singleton'],
 				'service.status' => ['class' => 'Core\Services\Status\StatusService', 'type' => 'singleton'],
 			));
 

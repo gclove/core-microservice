@@ -34,16 +34,16 @@
 
 			//register sync
 			if (true === $sync)
-				$this->_lunch($key, true);
+				$this->load($key, true);
 		}
 
 		/**
 		 * @param string $method
 		 * @param bool   $writeSync
 		 */
-		private function _lunch(string $method, bool $writeSync = false): void
+		private function load(string $method, bool $writeSync = false): void
 		{
-			$writeSync ? $this->sync[$method] = true : NULL;
+			$writeSync ? $this->sync[$method] = true : null;
 
 			$method = 'register' . ucfirst($method);
 			$this->{$method}();
@@ -51,9 +51,11 @@
 
 		protected function run()
 		{
-			foreach ($this->register as $key => $value)
-				if (NULL != $value && !array_key_exists($key, $this->sync))
-					$this->_lunch($key);
+			$load = $this->register;
+
+			foreach ($load as $key => $value)
+				if (null != $value && !array_key_exists($key, $this->sync))
+					$this->load($key);
 		}
 
 		/**
@@ -63,7 +65,7 @@
 		{
 			if ('Lumen' === framework())
 				foreach ($this->register['configs'] as $config)
-					is_string($config) ? $this->app->configure($config) : NULL;
+					is_string($config) ? $this->app->configure($config) : null;
 		}
 
 		/**

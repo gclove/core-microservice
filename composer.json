@@ -20,6 +20,7 @@
         "monolog/monolog": "^1.23",
         "aws/aws-sdk-php-laravel": "^3.2",
         "league/fractal": "^0.17.0",
+        "fabrizio-cafolla/resources-manager": "dev-master",
         "fabrizio-cafolla/cache-system": "dev-master",
         "fabrizio-cafolla/response-http": "dev-master"
     },

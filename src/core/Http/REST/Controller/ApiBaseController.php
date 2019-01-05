@@ -43,6 +43,7 @@
 			$this->acl = app('service.acl');
 			$this->cache = app('service.cache');
 			$this->log = app('service.log');
+			$this->manager = app('service.manager');
 		}
 
 		/**
