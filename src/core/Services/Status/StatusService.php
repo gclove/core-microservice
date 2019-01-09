@@ -9,10 +9,6 @@
 	namespace Core\Services\Status;
 
 
-	/**
-	 * Class StatusService
-	 * @package Core\Services\Status
-	 */
 	class StatusService
 	{
 		/**
@@ -36,14 +32,12 @@
 		protected $statusCode;
 
 		/**
-		 * StatusService constructor.
+		 *  Default constructor.
 		 *
-		 * @param bool|null   $success
-		 * @param int|null    $statusCode
-		 * @param array       $data
-		 * @param null|string $message
-		 *
-		 * @throws \Exception
+		 * @param bool   $success
+		 * @param string $statusCode
+		 * @param array  $data
+		 * @param string $message
 		 */
 		public function __construct(?bool $success = null, ?int $statusCode = null, array $data = array(), ?string $message = null)
 		{
@@ -60,13 +54,13 @@
 		 *
 		 *  Instances factory.
 		 *
-		 * @param bool|null   $success
-		 * @param int|null    $statusCode
-		 * @param array       $data
-		 * @param null|string $message
+		 * @param bool   $success
+		 * @param string $statusCode
+		 * @param array  $data
+		 * @param string $message
 		 *
-		 * @return \Core\Services\Status\StatusService
-		 * @throws \Exception
+		 * @return ServiceStatus
+		 *    The instance.
 		 */
 		public static function set(?bool $success, ?int $statusCode = null, array $data = array(), ?string $message = null)
 		{
@@ -155,9 +149,6 @@
 			return $this->success;
 		}
 
-		/**
-		 * @return array
-		 */
 		public function toArray()
 		{
 			return array(
@@ -168,9 +159,6 @@
 			);
 		}
 
-		/**
-		 * @return string
-		 */
 		public function __toString()
 		{
 			$toString = json_encode($this->toArray(),JSON_FORCE_OBJECT);
