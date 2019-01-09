@@ -1,40 +1,45 @@
 <?php
 
-	namespace Core\Http\REST\Controller;
+	namespace Core\Http\Controller;
 
-	use Laravel\Lumen\Routing\Controller as BaseController;
+	use Illuminate\Routing\Controller as BaseController;
 	use ResponseHTTP\Response\HttpResponse;
 
 	/**
 	 * Class ApiBaseController
 	 * @package Core\Http\REST\v1
 	 */
-	class ApiBaseController extends BaseController
+	class LaravelBaseController extends BaseController
 	{
 		/**
-		 * @var ApiService
+		 * @var \Core\Services\Api\ApiService
 		 */
 		public $api;
 
 		/**
-		 * @var AuthService
+		 * @var \Core\Services\Auth\AuthService
 		 */
 		public $auth;
 
 		/**
-		 * @var ACLService
+		 * @var \Core\Services\ACL\ACLService
 		 */
 		public $acl;
 
 		/**
-		 * @var Cache
+		 * @var \CacheSystem\Services\CacheService
 		 */
 		public $cache;
 
 		/**
-		 * @var Log
+		 * @var \Core\Services\Log\LogService
 		 */
 		public $log;
+
+		/**
+		 * @var \Core\Services\Manager\ManagerService
+		 */
+		public $manager;
 
 		public function __construct()
 		{
