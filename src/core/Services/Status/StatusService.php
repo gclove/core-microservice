@@ -35,18 +35,15 @@
 		 *  Default constructor.
 		 *
 		 * @param bool   $success
-		 * @param string $statusCode
+		 * @param int $statusCode
 		 * @param array  $data
 		 * @param string $message
 		 */
-		public function __construct(?bool $success = null, ?int $statusCode = null, array $data = array(), ?string $message = null)
+		public function __construct(bool $success = null, ?int $statusCode = null, ?array $data = array(), ?string $message = null)
 		{
 			$this->success = $success;
 			$this->data = $data;
 			$this->message = $message;
-
-			if (!is_int($statusCode) && !is_null($statusCode))
-				throw new \Exception("Error statusCode: (" . gettype($statusCode) . ") " . $statusCode . ", will be int or null");
 			$this->statusCode = $statusCode;
 		}
 
@@ -55,14 +52,14 @@
 		 *  Instances factory.
 		 *
 		 * @param bool   $success
-		 * @param string $statusCode
+		 * @param int $statusCode
 		 * @param array  $data
 		 * @param string $message
 		 *
-		 * @return ServiceStatus
+		 * @return StatusService
 		 *    The instance.
 		 */
-		public static function set(?bool $success, ?int $statusCode = null, array $data = array(), ?string $message = null)
+		public static function set(bool $success, ?int $statusCode = null, ?array $data = array(), ?string $message = null): StatusService
 		{
 			return new StatusService($success, $statusCode, $data, $message);
 		}
@@ -78,15 +75,14 @@
 		public function data($keys = null):array
 		{
 
-			if (is_string($keys)) {
+			if (is_string($keys))
 				$keys = (array) $keys;
-			}
+
 			if (is_array($keys)) {
 				$data = array();
-				foreach ($keys as $key) {
-					$name = explode('.', $key);
-					$data[last($name)] = array_get($this->data, $key, null);
-				}
+				foreach ($keys as $key)
+					$data[last(explode('.', $key))] = array_get($this->data, $key, null);
+
 				return $data;
 			}
 
@@ -103,7 +99,7 @@
 		 *    method failed (AND) with the specified
 		 *    status code.
 		 */
-		public function fail(int $withStatusCode = null): bool
+		public function isFail(int $withStatusCode = null): bool
 		{
 			if ($withStatusCode) {
 				return !$this->success && $withStatusCode === $this->statusCode;
@@ -140,7 +136,7 @@
 		 *    method ran successfully AND with the specified
 		 *    status code.
 		 */
-		public function success(int $withStatusCode = null): bool
+		public function isSuccess(int $withStatusCode = null): bool
 		{
 			if ($withStatusCode) {
 				return $this->success && $withStatusCode === $this->statusCode;

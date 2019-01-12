@@ -21,7 +21,6 @@
 	 * Class ACLService
 	 * @package Core\Services\ACL
 	 */
-
 	class ACLService extends Service
 	{
 		/**
@@ -34,42 +33,38 @@
 		 */
 		private $permission;
 
-
-		/**
-		 * @var Permission
-		 */
-		private $response;
-
 		/**
 		 * ACLService constructor.
 		 */
 		public function __construct()
 		{
-			$this->role = new Role;
-			$this->permission = new Permission;
-
-			$this->response = app('service.response');
+			$this->role = new Role();
+			$this->permission = new Permission();
 		}
 
 		/**
 		 * Method for assigning roles or permissions to a user.
 		 * The parameters are simple arrays, with the possibility to use the sync method (optional),
 		 * a failure response is returned if one of the roles or permissions are already assigned to the user,
-		 * otherwise a successful answer occurs, in addition there are exceptions if the roles or permissions you wish to assign are not present in the system
+		 * otherwise a successful answer occurs, in addition there are exceptions if the roles or permissions you wish
+		 * to assign are not present in the system
 		 *
-		 * @param $user
+		 * @param       $user
 		 * @param array $roles
 		 * @param array $permissions
-		 * @param bool $sync
+		 * @param bool  $sync
+		 *
 		 * @return mixed
+		 *
+		 * @return \Core\Services\ServiceStatus|\Core\Services\Status\StatusService|object
 		 */
 		public function assign($user, array $roles = [], array $permissions = [], $sync = false)
 		{
 			if ($this->check($user, ['roles' => $roles]))
-				return $this->response->error("User already has one of these roles " . $roles);
+				return $this->fail(null, array(), "User already has one of these roles " . $roles);
 
 			if ($this->check($user, ['permissions' => $permissions]))
-				return $this->response->error("User already has one of these permissions " . $permissions);
+				return $this->fail(null, array(), "User already has one of these permissions " . $permissions);
 
 			try {
 				if ($sync) {
@@ -80,7 +75,7 @@
 					$user->givePermissionTo($permissions);
 				}
 
-				return $this->response->success("Assigned successful to user id: " . $user->id);
+				return $this->success(null, array(), "Assigned successful to user id: " . $user->id);
 
 			} catch (RoleDoesNotExist $e) {
 				foreach ($roles as $role) {
@@ -95,15 +90,18 @@
 
 		/**
 		 * Method to check if a user has permissions or roles already assigned.
-		 * The parameters passed are three the first is User, the second is an array that can be composed in these three ways:
+		 * The parameters passed are three the first is User, the second is an array that can be composed in these
+		 * three ways:
 		 * 1) ["roles" => ["role1", "role2", "roleN"]] or ["roles" => "role1"]
 		 * 2) ["permissions" => ["permission1", "permission2", "permissionN"]] or ["permissions" => "permission"]
 		 * 3) It is possible to put the two keys together in the array
 		 * The third parameter is the choice to check if the user is in possession of all the roles or permissions.
-		 * The true result is determined by the fact that a role or permission is already assigned to the user, it returns false if the user does not own any of those roles or permissions.
+		 * The true result is determined by the fact that a role or permission is already assigned to the user, it
+		 * returns false if the user does not own any of those roles or permissions.
 		 *
-		 * @param $user
+		 * @param       $user
 		 * @param array $data
+		 *
 		 * @return bool
 		 */
 		public function check($user, array $data, $all = false): bool
@@ -121,16 +119,18 @@
 
 		/**
 		 * Method for create Role and Permission in DB
-		 * This function can be used by default only by Admin, but it is possible to change or choose to remove this restriction.
-		 * Example of the array to pass ["role1", "role2", "roleN"] or ["permission1", "permission2", "permissionN"]
-		 * For more information follow the official spatie guide
+		 * This function can be used by default only by Admin, but it is possible to change or choose to remove this
+		 * restriction. Example of the array to pass ["role1", "role2", "roleN"] or ["permission1", "permission2",
+		 * "permissionN"] For more information follow the official spatie guide
 		 *
-		 * tip: Use this function only if the logged in user is admin or in methods that are only called by the internal system
+		 * tip: Use this function only if the logged in user is admin or in methods that are only called by the
+		 * internal system
 		 *
-		 * @param array $roles
-		 * @param array $permissions
+		 * @param array  $roles
+		 * @param array  $permissions
 		 * @param string $guard
-		 * @return static
+		 *
+		 * @return \Core\Services\ServiceStatus|object
 		 */
 		public function create(array $roles = [], array $permissions = [], $guard = 'api')
 		{
@@ -148,7 +148,7 @@
 					return $e->create($permission, 'api');
 				}
 			}
-			return $this->response->success("Roles and Permissions successful created");
+			return $this->success(null, array(), "Roles and Permissions successful created");
 		}
 
 		/**
@@ -160,11 +160,15 @@
 		 * or ["nameRole" => ["namePermission", namePermission2"], "nameRole1" => "namePermission",]
 		 * For more information follow the official spatie guide
 		 *
-		 * tip: if permissions into array are set to null and sync parameter is true, the Role are remove all permissions assigned
-		 * tip: Use this function only if the logged in user is admin or in methods that are only called by the internal system
+		 * tip: if permissions into array are set to null and sync parameter is true, the Role are remove all
+		 * permissions assigned tip: Use this function only if the logged in user is admin or in methods that are only
+		 * called by the internal system
 		 *
 		 * @param array $roles
+		 *
 		 * @return static
+		 *
+		 * @return \Core\Services\ServiceStatus|object
 		 */
 		public function give(array $roles, $sync = false)
 		{
@@ -179,6 +183,6 @@
 					return $e->create($permission, 'api');
 				}
 			}
-			return $this->response->success("Assigned successful");
+			return $this->success(null, array(), "Assigned successful");
 		}
 	}

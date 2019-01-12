@@ -9,6 +9,7 @@
 	namespace Core\Services\Auth;
 
 	use Core\Services\Service;
+	use Core\Services\Status\StatusService;
 	use Tymon\JWTAuth\JWTAuth;
 	use Illuminate\Contracts\Auth\Guard;
 
@@ -27,16 +28,6 @@
 		public function __construct()
 		{
 			$this->jwt = app(JWTAuth::class);
-		}
-
-		/**
-		 * Method to use Auth\Guard function
-		 *
-		 * @return \Laravel\Lumen\Application|mixed
-		 */
-		public function guard()
-		{
-			return app(Guard::class);
 		}
 
 		/**
@@ -82,36 +73,49 @@
 		{
 			$user = $this->guard()->user();
 			if (!$user)
-				return $this->response()->errorNotFound("User not found");
+				return $this->fail(404, array(), "User not found");
 
 			return $user;
 		}
 
 		/**
+		 * Method to use Auth\Guard function
+		 *
+		 * @return \Laravel\Lumen\Application|mixed
+		 */
+		public function guard()
+		{
+			return app(Guard::class);
+		}
+
+		/**
 		 * Check token and invalidate it
-		 * Response with message
+		 * Return status object with message
 		 *
 		 * @param bool $force
-		 * @return mixed
-		 * @throws \Tymon\JWTAuth\Exceptions\JWTException
+		 *
+		 * @return \Core\Services\ServiceStatus|object
 		 */
 		public function invalidate($force = false)
 		{
 			$this->tryAuthenticatedUser();
 			$this->jwt->parseToken()->invalidate($force);
-			return $this->response()->success('The token has been invalidated');
+
+			return $this->success(202, array(), 'The token has been invalidated');
 		}
 
 		/**
 		 * Refresh token and invalidate old token
+		 * Return status object with data and message
 		 *
 		 * @param bool $force
-		 * @return mixed
-		 * @throws \Tymon\JWTAuth\Exceptions\JWTException
+		 *
+		 * @return \Core\Services\ServiceStatus|object
 		 */
 		public function refresh($force = false, $resetClaims = false)
 		{
 			$token = $this->jwt->parseToken()->refresh($force, $resetClaims);
-			return $this->response()->success(compact('token'));
+
+			return $this->success(201, compact('token'), 'The token has been refreshed');
 		}
 	}

@@ -20,56 +20,62 @@
 	{
 		/**
 		 * Basic log
-		 * get with function default()
+		 * get with function getDefault()
 		 *
 		 * @var array
 		 */
-		private $default = [
-			'lumen',
-			'mails',
-			'queries',
-			'generics',
-
-			//Add your basic logs here
-		];
+		private $default = array();
 
 		/**
-		 * Basic log of day
-		 * get with function defaultDay()
-		 *
-		 * @var array
-		 */
-		private $defaultDay = [
-			'lumen',
-			'mails',
-			'queries',
-			'generics',
-
-			//Add your basic logshere
-		];
-
-		/**
-		 * Initialize the default logs with the instance of the Monolog class with today's date when the log file is created
+		 * Initialize the default logs with the instance of the Monolog class with today's date when the log file is
+		 * created
 		 *
 		 * @throws \Exception
 		 */
 		public function __construct()
 		{
-			foreach ($this->default as $name) {
+			$this->initDefault($this->default);
+		}
+
+		/**
+		 * Make default logs with Logger instance
+		 *
+		 * @param array $default
+		 *
+		 * @throws \Exception
+		 */
+		private function initDefault(array &$default = array()): void
+		{
+			if (null == $default)
+				return;
+
+			foreach ($default as $name) {
 				$path = $this->path($name);
-				$this->default[$name] = $this->logProcessor($path);
-			}
-			foreach ($this->defaultDay as $name) {
-				$path = $this->path($name, 'today');
-				$this->defaultDay[$name] = $this->logProcessor($path);
+				$default[$name] = $this->logProcessor($path);
 			}
 		}
 
 		/**
-		 * Method used to initialize the logs, returns the Monolog object, you can define the name of the log file by adding the date to it and choose the format.
+		 * Method to create path of Log
 		 *
-		 * @param $path
+		 * @param $name
+		 * @param $dataTime
+		 *
+		 * @return string
+		 */
+		private function path(string $name, $dataTime = null): string
+		{
+			$path = ($dataTime ? $name . '-' . Carbon::parse($dataTime)->toDateString() : $name) . '.log';
+			return $path;
+		}
+
+		/**
+		 * Method used to initialize the logs, returns the Monolog object, you can define the name of the log file by
+		 * adding the date to it and choose the format.
+		 *
+		 * @param        $path
 		 * @param string $formatter type of format log file
+		 *
 		 * @return Logger object Monolog
 		 * @throws \Exception
 		 */
@@ -84,23 +90,11 @@
 		}
 
 		/**
-		 * Method to create path of Log
-		 *
-		 * @param $name
-		 * @param $dataTime
-		 * @return string
-		 */
-		private function path($name, $dataTime = null): string
-		{
-			$path = ($dataTime ? $name . '-' . Carbon::parse($dataTime)->toDateString() : $name).'.log';
-			return $path;
-		}
-
-		/**
 		 * Private method to manage the log stream
 		 *
 		 * @param $path
 		 * @param $formatter
+		 *
 		 * @return StreamHandler
 		 * @throws \Exception
 		 */
@@ -115,16 +109,67 @@
 		 * Alias logProcessor
 		 * Method to create a new Log file
 		 *
-		 * @param $name
+		 * @param string $name
 		 * @param string $dataTime
 		 * @param string $formatter (Moolog/Formatter class)
+		 *
 		 * @return Logger
 		 * @throws \Exception
 		 */
-		public function new($name, $dataTime = null, $formatter = JsonFormatter::class)
+		public function create(string $name, $dataTime = null, $formatter = JsonFormatter::class)
 		{
 			$path = $this->path($name, $dataTime);
 			return $this->logProcessor($path, $formatter);
+		}
+
+		/**
+		 * Get basic logs
+		 * Example: $this->log->getDefault('mails')->info('Example used');
+		 *
+		 * @param $name
+		 *
+		 * @return mixed
+		 */
+		public function getDefault($name)
+		{
+			if (array_has($this->default, $name))
+				return $this->default[$name];
+
+			return null;
+		}
+
+		/**
+		 * Set default logs with instanced Logger obj
+		 *
+		 * @param array $add
+		 * @param bool  $merge
+		 */
+		public function setDefault(array $add, bool $merge = false)
+		{
+			//remove element if not a string
+			foreach ($add as $key => $value)
+				if (false === is_string($value))
+					unset($add[$key]);
+
+			if (true === $merge)
+				$this->default = array_merge($this->default, $add);
+			else
+				$this->default = $add;
+
+			$this->initDefault($this->default);
+		}
+
+		/**
+		 * Get log only today
+		 *
+		 * @param $name
+		 *
+		 * @return mixed|Logger|null
+		 * @throws \Exception
+		 */
+		public function getToday(string $name)
+		{
+			return $this->get($name, 'today');
 		}
 
 		/**
@@ -138,58 +183,17 @@
 		 *
 		 * @param string $name
 		 * @param string|yy-mm-dd $data
+		 *
 		 * @return mixed|Logger|null
 		 * @throws \Exception
 		 */
-		public function get($name = '', $dataTime = null)
+		public function get(string $name = '', $dataTime = null)
 		{
 			$path = $this->path($name, $dataTime);
 			if (Storage::disk('logs')->exists($path))
 				return $this->logProcessor($path);
 
-			$this->response()->errorException('Log required not exist: '.$name);
-		}
-
-		/**
-		 * Get basic logs
-		 * Example: $this->log->default('mails')->info('Example used');
-		 *
-		 * @param $name
-		 * @return mixed
-		 */
-		public function default($name)
-		{
-			if (array_has($this->default, $name))
-				return $this->default[$name];
-
-			$this->response()->errorException('Default log required not exist: '.$name);
-		}
-
-		/**
-		 * Get basic default day logs
-		 * Example: $this->log->defaultDay('mails')->info('Example used');
-		 *
-		 * @param $name
-		 * @return mixed
-		 */
-		public function defaultDay($name)
-		{
-			if (array_has($this->defaultDay, $name))
-				return $this->defaultDay[$name];
-
-			$this->response()->errorException('Default of day log required not exist: '.$name);
-		}
-
-		/**
-		 * Get log only today
-		 *
-		 * @param $name
-		 * @return mixed|Logger|null
-		 * @throws \Exception
-		 */
-		public function today($name)
-		{
-			return $this->get($name, 'today');
+			return null;
 		}
 
 	}

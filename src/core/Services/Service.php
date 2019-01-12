@@ -9,6 +9,7 @@
 	namespace Core\Services;
 
 	use ResponseHTTP\Response\HttpResponse;
+	use Core\Services\Status\StatusService;
 
 	abstract class Service
 	{
@@ -24,7 +25,7 @@
 		 *
 		 * @return StatusService
 		 */
-		protected function fail(int $statusCode = null, array $data = array(), string $message = null): object {
+		protected function fail(?int $statusCode = null, array $data = array(), string $message = null): object {
 			return StatusService::set(FALSE, $statusCode, $data, $message);
 		}
 
@@ -39,7 +40,7 @@
 		 *
 		 * @return ServiceStatus
 		 */
-		protected function success(int $statusCode = null, array $data = array(), string $message = null): object {
+		protected function success(?int $statusCode = null, array $data = array(), string $message = null): object {
 			return StatusService::set(TRUE, $statusCode, $data, $message);
 		}
 
