@@ -1,11 +1,14 @@
 ## Core Microservice Laravel / Lumen
-![](https://img.shields.io/badge/version-1.0.0--beta-green.svg)
+![](https://img.shields.io/badge/version-1.0.1--beta-green.svg)
+
+#### Description
+>This package implements all those basic services that any microservice or php application should have: JWT authentication management (for REST API), ACL management, and REST standar responses, cache system files and redis, internal communications status between controller, simplified logger, resources manager and so on.
 
 #### Let's go
     
     composer require fabrizio-cafolla/core-microservice
     
-    php aritsan microservice:publish
+    php artisan microservice:publish
     
 **Laravel**
     
@@ -13,7 +16,7 @@
     
     Core\Providers\ManagerServiceProvider::class
     
-######Add to (config/auth.php)   
+###### Add to (config/auth.php)   
 
     'service_providers' => [
         'jwt' =>  env('AUTH_PROVIDERS', Tymon\JWTAuth\Providers\LaravelServiceProvider::class)
